@@ -75,7 +75,7 @@ int eraDatini(const eraLEAPSECOND *builtin, int n_builtin,
 **  not be used elsewhere.
 **
 **  Given:
-**     builtin eraLEAPSECOND Array of year, month, TAI minus UTC
+**     builtin     eraLEAPSECOND   Array of year, month, TAI minus UTC
 **     n_builtin   int             Number of entries of the table.
 **
 **  Returned:
