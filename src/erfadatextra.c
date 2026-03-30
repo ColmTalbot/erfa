@@ -19,22 +19,8 @@
 #include "erfaextra.h"
 #include "erfadatextra.h"
 
-// static ERFA_THREAD_LOCAL eraLEAPSECOND *changes = builtin_changes;
-// static ERFA_THREAD_LOCAL int NDAT = n_builtin_changes;
 static ERFA_THREAD_LOCAL eraLEAPSECOND *changes;
 static ERFA_THREAD_LOCAL int NDAT = -1;
-
-
-void _eraResetLeapSeconds() 
-/*
-**  Reset the leap second table to the built-in version.
-**
-**  This function is for internal use only and should not be used elsewhere.
-*/
-{
-    changes = builtin_changes;
-    NDAT = n_builtin_changes;
-}
 
 
 int eraGetLeapSeconds(eraLEAPSECOND **leapseconds)
@@ -51,7 +37,11 @@ int eraGetLeapSeconds(eraLEAPSECOND **leapseconds)
 */
 {
     if (NDAT <= 0) {
-        _eraResetLeapSeconds();
+        double delat;
+        int stat = eraDat(2000, 1, 1, 0., &delat);
+        if (stat != 0 || NDAT <= 0) {
+            return -1;
+        }
     }
     *leapseconds = changes;
     return NDAT;
@@ -71,15 +61,12 @@ void eraSetLeapSeconds(eraLEAPSECOND *leapseconds, int count)
 **     *No* sanity checks are performed.
 */
 {
-    if (count <= 0) {
-        _eraResetLeapSeconds();
-    } else {
-        changes = leapseconds;
-        NDAT = count;
-    }
+    changes = leapseconds;
+    NDAT = count;
 }
 
-int eraDatini(eraLEAPSECOND **leapseconds)
+int eraDatini(const eraLEAPSECOND *builtin, int n_builtin,
+              eraLEAPSECOND **leapseconds)
 /*
 **  Get the leap second table, initializing it to the built-in version
 **  if necessary.
@@ -88,6 +75,7 @@ int eraDatini(eraLEAPSECOND **leapseconds)
 **  not be used elsewhere.
 **
 **  Given:
+**     builtin eraLEAPSECOND Array of year, month, TAI minus UTC
 **     n_builtin   int             Number of entries of the table.
 **
 **  Returned:
@@ -99,7 +87,7 @@ int eraDatini(eraLEAPSECOND **leapseconds)
 */
 {
     if (NDAT <= 0) {
-        _eraResetLeapSeconds();
+        eraSetLeapSeconds((eraLEAPSECOND *)builtin, n_builtin);
     }
     *leapseconds = changes;
     return NDAT;
