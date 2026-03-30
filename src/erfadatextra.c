@@ -19,8 +19,10 @@
 #include "erfaextra.h"
 #include "erfadatextra.h"
 
-static ERFA_THREAD_LOCAL eraLEAPSECOND *changes = builtin_changes;
-static ERFA_THREAD_LOCAL int NDAT = n_builtin_changes;
+// static ERFA_THREAD_LOCAL eraLEAPSECOND *changes = builtin_changes;
+// static ERFA_THREAD_LOCAL int NDAT = n_builtin_changes;
+static ERFA_THREAD_LOCAL eraLEAPSECOND *changes;
+static ERFA_THREAD_LOCAL int NDAT = -1;
 
 
 void _eraResetLeapSeconds() 
