@@ -37,6 +37,8 @@ int eraDatini(const eraLEAPSECOND *builtin, int n_builtin,
 */
 #if defined(__cplusplus) && __cplusplus >= 201103L
 #  define ERFA_THREAD_LOCAL thread_local
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L
+#  define ERFA_THREAD_LOCAL thread_local
 #elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 #  define ERFA_THREAD_LOCAL _Thread_local
 #elif defined(__GNUC__) || defined(__clang__)
